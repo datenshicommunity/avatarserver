@@ -1,47 +1,33 @@
 import os
-from pyfiglet import Figlet
 from flask import Flask, send_file, jsonify
-from subprocess import call
-from sys import platform as _platform
-
-if _platform == 'win32' or _platform == 'win64':
-    call('cls', shell=True)
-elif _platform == 'linux' or _platform == 'linux2':
-    call('clear', shell=True)
-
-f = Figlet(font='stop')
-print(f.renderText('Avatar-Server'))
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 1
 
-avatar_dir = "avatars"  # no slash
+AVATAR_DIR = "avatars"
+DEFAULT_AVATAR = os.path.join(AVATAR_DIR, "-1.png")
 
 # create avatars directory if it does not exist
-if not os.path.exists(avatar_dir):
-    os.makedirs(avatar_dir)
+os.makedirs(AVATAR_DIR, exist_ok=True)
+
 
 @app.route("/status")
-def serverStatus():
-    return jsonify({
-        "response": 200,
-        "status": 1
-    })
+def server_status():
+    return jsonify({"response": 200, "status": 1})
+
 
 @app.route("/<int:uid>")
-def serveAvatar(uid):
-    # Check if avatar exists
-    if os.path.isfile("{}/{}.png".format(avatar_dir, uid)):
-        avatarid = uid
-    else:
-        avatarid = -1
+def serve_avatar(uid):
+    avatar_path = os.path.join(AVATAR_DIR, f"{uid}.png")
+    if os.path.isfile(avatar_path):
+        return send_file(avatar_path)
+    return send_file(DEFAULT_AVATAR)
 
-    # Serve actual avatar or default one
-    return send_file("{}/{}.png".format(avatar_dir, avatarid))
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return send_file("{}/-1.png".format(avatar_dir))
+    return send_file(DEFAULT_AVATAR)
 
-# Run the server
-app.run(host="0.0.0.0", port=5020)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5020)

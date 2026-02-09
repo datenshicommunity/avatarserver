@@ -1,0 +1,14 @@
+services:
+  avatarserver:
+    build: .
+    container_name: datenshi-avatarserver
+    restart: unless-stopped
+    ports:
+      - "5020:5020"
+    volumes:
+      - ./avatars:/app/avatars
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:5020/status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
