@@ -3,3 +3,4 @@ avatars/*.png
 __pycache__/
 *.pyc
 .env
+data/
