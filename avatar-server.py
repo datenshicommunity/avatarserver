@@ -5,7 +5,7 @@ app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 1
 
 AVATAR_DIR = "avatars"
-DEFAULT_AVATAR = "default-avatar.png"
+DEFAULT_AVATAR = os.path.join(AVATAR_DIR, "-1.png")
 
 # create avatars directory if it does not exist
 os.makedirs(AVATAR_DIR, exist_ok=True)

@@ -16,10 +16,13 @@ WORKDIR /app
 COPY --from=builder /install /usr/local
 
 COPY avatar-server.py .
-COPY avatars/-1.png default-avatar.png
+COPY avatars/-1.png seed/-1.png
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
 
 EXPOSE 5020
 
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["gunicorn", "avatar-server:app", \
      "--bind", "0.0.0.0:5020", \
      "--workers", "2", \
