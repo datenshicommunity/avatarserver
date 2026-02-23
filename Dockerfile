@@ -16,7 +16,7 @@ WORKDIR /app
 COPY --from=builder /install /usr/local
 
 COPY avatar-server.py .
-COPY avatars/-1.png avatars/-1.png
+COPY avatars/-1.png default-avatar.png
 
 EXPOSE 5020
 
