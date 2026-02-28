@@ -1,12 +1,14 @@
+# Lokal: docker compose up (build .). Deploy: Jenkins replace __DEPLOY_IMAGE__ lalu pull & up.
 services:
   avatarserver:
+    image: __DEPLOY_IMAGE__
     build: .
     container_name: datenshi-avatarserver
     restart: unless-stopped
     ports:
       - "5020:5020"
     volumes:
-      - ./avatars:/app/avatars
+      - ./data:/app/avatars
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:5020/status"]
       interval: 30s
